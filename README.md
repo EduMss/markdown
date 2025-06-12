@@ -18,3 +18,6 @@
 
 - https://patorjk.com/software/taag — escreve texto e escolhe a fonte ASCII (como slant, block, doom etc.)
 
+## 🗒️ Editor MarkDown
+
+- https://readme.so/pt/editor
