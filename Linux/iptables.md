@@ -16,7 +16,6 @@ O `iptables` possui várias tabelas, que definem o tipo de processamento aplicad
 → A mais usada para roteamento e redirecionamento é a tabela nat.
 
 ---
----
 
 ## 🔄 Chains (Cadeias) - Fluxo dos Pacotes
 
@@ -25,13 +24,11 @@ O `iptables` possui várias tabelas, que definem o tipo de processamento aplicad
 - Exemplo: SSH, HTTP, ping para o servidor.
 
 ---
----
 
 ## ➖ OUTPUT
 - Pacotes gerados pela própria máquina.
 - Exemplo: A máquina faz ping ou conecta-se a outro servidor.
 
----
 ---
 
 ## 🔁 FORWARD
@@ -39,7 +36,6 @@ O `iptables` possui várias tabelas, que definem o tipo de processamento aplicad
 - Usado quando a máquina atua como roteador ou firewall.
 - Exemplo: Um roteador Linux repassando tráfego de uma rede interna para a internet.
 
----
 ---
 
 ## 🔗 PREROUTING
@@ -49,7 +45,6 @@ O `iptables` possui várias tabelas, que definem o tipo de processamento aplicad
 - 🔥 É onde você faz redirecionamento de portas.
 
 ---
----
 
 ## 🔚 POSTROUTING
 - Acontece depois do roteamento, antes do pacote sair pela interface.
@@ -58,14 +53,12 @@ O `iptables` possui várias tabelas, que definem o tipo de processamento aplicad
 - 🔥 É onde você faz compartilhamento de internet (masquerade).
 
 ---
----
 
 ## 🌐 NAT (Network Address Translation)
 ### ✅ O que é NAT?
 - É a tradução de endereços de rede.
 - Permite que vários dispositivos compartilhem um único IP público ou modifique IPs/portas nos pacotes.
 
----
 ---
 
 ## 🚥 Tipos de NAT
@@ -79,7 +72,6 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 - Isso troca o IP de origem pelo IP da interface `eth0`.
 
 ---
----
 
 ## 🔃 DNAT (Destination NAT)
 - Altera o IP de destino dos pacotes.
@@ -88,7 +80,7 @@ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ```
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.1.100:8080
 ```
----
+
 ---
 
 ## 🗺️ Roteamento
@@ -98,6 +90,7 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 19
 → Roteamento ocorre em máquinas que possuem mais de uma interface de rede (ex.: atuando como firewall, roteador ou gateway).
 
 ## 🔥 Ativando roteamento no Linux:
+
 ```
 sudo sysctl -w net.ipv4.ip_forward=1
 ```
@@ -108,7 +101,6 @@ sudo sysctl -w net.ipv4.ip_forward=1
 net.ipv4.ip_forward=1
 ```
 
----
 ---
 
 ## 🔗 Fluxo Simplificado dos Pacotes no IPTABLES
@@ -127,7 +119,7 @@ net.ipv4.ip_forward=1
                ↓
        Saída pela interface
 ```
----
+
 ---
 
 ## 🔥 🔥 Resumo Rápido dos Conceitos
@@ -145,7 +137,6 @@ net.ipv4.ip_forward=1
 | **Roteamento**  | Decidir para onde enviar pacotes com base nas rotas                                 |
 
 ---
----
 
 ## 💡 Exemplos Práticos
 ## 🔄 Habilitar compartilhamento de internet (SNAT/MASQUERADE):
@@ -153,6 +144,7 @@ net.ipv4.ip_forward=1
 ```
 sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ```
+
 ## 🔁 Redirecionar porta 80 para um servidor interno (DNAT):
 
 ```
@@ -165,9 +157,6 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 19
 sudo sysctl -w net.ipv4.ip_forward=1
 ```
 
----
----
----
 ---
 
 # 🔥 Documentação de Redirecionamento de Rede com IPTABLES no Linux
@@ -202,9 +191,11 @@ Este documento tem como objetivo ensinar como utilizar o `iptables` no Linux par
 ## 🚀 Exemplos de Redirecionamento
 
 ### 1️⃣ 🔁 Redirecionar uma porta local para outra porta local
+
 ```bash
 sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 3000
 ```
+
 **Explicação:**
 - `-t nat` → Define que a regra será aplicada na tabela NAT (responsável por redirecionamento e alteração de endereços).
 - `-A PREROUTING` → Adiciona a regra na chain PREROUTING (antes de decidir o destino final do pacote).
@@ -215,7 +206,6 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 300
 
 ✔️ Acessar `http://127.0.0.1:8080` será redirecionado para `http://127.0.0.1:3000`.
 
----
 ---
 
 ### 2️⃣ 🔀 Redirecionar requisição a um IP para outro IP (DNAT)
@@ -231,7 +221,6 @@ sudo iptables -t nat -A PREROUTING -d 192.168.1.100 -p tcp --dport 80 -j DNAT --
 ✔️ Acessar `192.168.1.100:80` será enviado para `192.168.1.200:8080`.
 
 ---
----
 
 ### 3️⃣ 🌐 Tornar a máquina um roteador (liberar o forward)
 ```bash
@@ -245,7 +234,6 @@ sudo sysctl -p
 → Permite que a máquina encaminhe pacotes entre redes (atuar como roteador).
 
 ---
----
 
 ### 4️⃣ 🚪 Redirecionar saída da máquina (OUTPUT)
 ```bash
@@ -255,7 +243,6 @@ sudo iptables -t nat -A OUTPUT -d 8.8.8.8 -p tcp --dport 53 -j DNAT --to-destina
 - Aplica-se no tráfego originado da própria máquina (chain OUTPUT).
 - Qualquer tentativa de conexão TCP para `8.8.8.8:53` será redirecionada para `1.1.1.1:53`.
 
----
 ---
 
 ## 🗑️ Removendo Regras
@@ -348,8 +335,6 @@ iptables -t [tabela] -A [chain] [condições] -j [ação]
 - Sempre teste localmente antes de aplicar em produção.
 
 ---
----
-
 
 # 🔐 Documentação de Políticas Padrão (`iptables -P`) no Linux
 
@@ -360,7 +345,6 @@ As **políticas padrão** no `iptables` definem o que deve acontecer com um paco
 👉 Ou seja, se não houver nenhuma regra aplicável ao pacote, a política padrão da chain será aplicada.
 
 ---
----
 
 ## 🚥 Chains que suportam políticas padrão:
 
@@ -370,7 +354,6 @@ As **políticas padrão** no `iptables` definem o que deve acontecer com um paco
 
 > ⚠️ Chains como `PREROUTING` e `POSTROUTING` não suportam políticas padrão, pois são usadas para NAT e não possuem decisão de aceitar ou rejeitar pacotes.
 
----
 ---
 
 ## 🔧 Comando para definir a política padrão:
@@ -383,7 +366,6 @@ sudo iptables -P [CHAIN] [POLÍTICA]
 - `[CHAIN]` → Nome da chain (`INPUT`, `FORWARD` ou `OUTPUT`).
 - `[POLÍTICA]` → Ação padrão (`ACCEPT` ou `DROP`).
 
----
 ---
 
 ## ✅ Exemplos de Configuração de Políticas
@@ -404,7 +386,6 @@ sudo iptables -P OUTPUT ACCEPT
 ```
 
 ---
----
 
 ## 🔐 Exemplo de configuração segura mais comum para servidores:
 
@@ -424,7 +405,6 @@ sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT  # P
 ```
 
 ---
----
 
 ## 🚫 O que acontece sem uma regra para tráfego de resposta?
 
@@ -438,7 +418,6 @@ sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ```
 → Você não conseguirá nem acessar sites, nem receber respostas de conexões já estabelecidas. Este é um erro muito comum.
 
----
 ---
 
 ## 🗑️ Como listar as políticas ativas:
@@ -455,7 +434,6 @@ Chain OUTPUT (policy ACCEPT 200 packets, 50000 bytes)
 ```
 
 ---
----
 
 ## 🔄 Resetar políticas para permitir tudo:
 
@@ -470,7 +448,6 @@ E limpar todas as regras:
 sudo iptables -F
 ```
 
----
 ---
 
 ## 💾 Tornando as Políticas Permanentes
@@ -493,7 +470,6 @@ sudo iptables-restore < /etc/iptables/rules.v4
 ```
 
 ---
----
 
 ## 🚩 Boas Práticas
 
@@ -502,7 +478,6 @@ sudo iptables-restore < /etc/iptables/rules.v4
 - 🌐 Deixe `OUTPUT ACCEPT` em servidores comuns para não bloquear atualizações, DNS e acesso à internet.
 - 🚫 Se a máquina não for roteador, use `FORWARD DROP`.
 
----
 ---
 
 ## 🏗️ Resumo Visual das Políticas
@@ -514,14 +489,10 @@ sudo iptables-restore < /etc/iptables/rules.v4
 | FORWARD | Encaminhamento (roteamento)             | DROP (se não roteia) |
 
 ---
----
 
 ## 🔐 Aviso
 ⚠️ Atenção! Sempre que definir `INPUT DROP`, certifique-se de adicionar antes uma regra permitindo a porta do SSH, ou você perderá acesso remoto à máquina.
 
----
----
----
 ---
 
 # 📜 Documentação de Logs no IPTABLES
@@ -532,8 +503,6 @@ sudo iptables-restore < /etc/iptables/rules.v4
 → O iptables por padrão não gera logs automáticos de conexões permitidas ou bloqueadas, a não ser que você adicione a ação LOG em uma regra.
 
 ---
----
-
 
 ## 🔥 Como funciona o LOG no IPTABLES?
 
@@ -541,7 +510,6 @@ Quando você adiciona uma regra com o alvo (`target`) **LOG**, o kernel envia um
 
 Esses logs podem ser visualizados com ferramentas como `dmesg`, `journalctl` ou diretamente nos arquivos de log do sistema.
 
----
 ---
 
 ## 📦 Sintaxe da Regra de LOG:
@@ -551,7 +519,6 @@ sudo iptables -A [CHAIN] -j LOG [opções]
 ```
 
 ---
----
 
 ## 🛠️ Parâmetros comuns para LOG:
 
@@ -560,7 +527,6 @@ sudo iptables -A [CHAIN] -j LOG [opções]
 |`--log-prefix ""`|Texto que será adicionado no início de cada linha de log (máx. 29 caracteres).|
 |`--log-level`|Nível de severidade do syslog (ex.: `info`, `warning`, `debug`, `notice`).|
 
----
 ---
 
 ## ✅ Exemplos Práticos
@@ -575,7 +541,6 @@ sudo iptables -A INPUT -p tcp --dport 22 -j DROP
 → Isso loga qualquer tentativa de conexão SSH e depois bloqueia.
 
 ---
----
 
 ## 🚫 Logar todos os pacotes DROP na chain INPUT:
 
@@ -587,7 +552,6 @@ sudo iptables -A INPUT -j DROP
 → Isso não bloqueia sozinho, apenas gera o log. É por isso que geralmente usamos `LOG` seguido de `DROP` ou `REJECT`.
 
 ---
----
 
 ## 🌐 Logar tráfego de uma porta específica (ex.: porta 80):
 
@@ -595,7 +559,6 @@ sudo iptables -A INPUT -j DROP
 sudo iptables -A INPUT -p tcp --dport 80 -j LOG --log-prefix "HTTP TRAFFIC: " --log-level info
 ```
 
----
 ---
 
 ## 🗒️ Onde os logs aparecem?
@@ -605,7 +568,6 @@ sudo iptables -A INPUT -p tcp --dport 80 -j LOG --log-prefix "HTTP TRAFFIC: " --
 ```
 sudo dmesg | grep "INPUT DROP"
 ```
-
 
 ## 🔥 Verificar em arquivos de log:
 - Debian/Ubuntu:
@@ -622,13 +584,11 @@ sudo journalctl -k | grep "INPUT DROP"
 ```
 
 ---
----
 
 ## 🧹 Logs muito verbosos? Cuidado!
 - Logs de IPTABLES podem gerar muito volume, principalmente se você estiver logando pacotes DROP ou conexões frequentes.
 - Isso pode encher seu disco rapidamente.
 
----
 ---
 
 ## 🚩 Dicas para controlar volume de logs:
@@ -645,7 +605,6 @@ sudo iptables -A INPUT -s 192.168.1.50 -j LOG --log-prefix "SUSPECT: "
 
 4. Utilize ferramentas como `logrotate` para gerenciar e rotacionar seus logs automaticamente.
 
----
 ---
 
 ## 🏗️ Exemplo Completo de Firewall com Logs
@@ -673,7 +632,6 @@ sudo iptables -A INPUT -j DROP
 ```
 
 ---
----
 
 ## 💾 Tornando Logs e Regras Permanentes
 
@@ -695,7 +653,6 @@ sudo iptables-restore < /etc/iptables/rules.v4
 ```
 
 ---
----
 
 ## 🏁 Resumo Rápido
 
@@ -706,13 +663,10 @@ sudo iptables-restore < /etc/iptables/rules.v4
 |`--log-level [info]`|warning| 
 
 ---
----
 
 ## ⚠️ Aviso
 - Nunca logue tudo sem filtro, isso pode gerar gigabytes de dados rapidamente.
 
 - Sempre combine `LOG` com `DROP`, `ACCEPT` ou `REJECT` para garantir o comportamento esperado.
 
-
 ---
---- 
