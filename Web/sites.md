@@ -6,6 +6,11 @@
 - https://www.ssllabs.com/ssltest/
 - https://www.sitedossl.com.br/
 
+## 🕷️ Sites para verificar se o arquivo é virus
+
+- https://www.virustotal.com/gui/home/upload
+- https://nordvpn.com/pt-br/file-checker/
+
 ## 😁 Site para ver emojis em ACSII
 
 - https://emojipedia.org/
