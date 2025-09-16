@@ -85,6 +85,12 @@ spec:
 
 Esse Service escuta na porta 80 e redireciona para a porta 3000 dos Pods, fazendo balanceamento de carga entre eles.
 
+### Fluxo resumido
+1. Usuário acessa http://<IP-do-Service>:80
+2. O Service recebe a requisição e escolhe um dos Pods disponíveis.
+3. Redireciona a requisição para a porta 3000 do Pod escolhido.
+4. O Pod responde normalmente.
+
 ---
 
 ## 🧪 O que é Minikube?
