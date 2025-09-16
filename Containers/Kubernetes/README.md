@@ -91,6 +91,11 @@ Esse Service escuta na porta 80 e redireciona para a porta 3000 dos Pods, fazend
 
 **Minikube** é uma ferramenta que permite rodar um cluster Kubernetes localmente. Ideal para testes, aprendizado e desenvolvimento.
 
+### Como funciona? 
+- Ele cria uma máquina virtual (ou usa Docker, dependendo da configuração) que simula um nó Kubernetes.
+- Dentro dessa máquina, ele instala e configura todos os componentes necessários para rodar um cluster Kubernetes funcional.
+- Você pode usar o kubectl para interagir com esse cluster, como faria em produção.
+
 ### Vantagens:
 - Fácil de instalar e usar
 - Ideal para aprender Kubernetes sem gastar com cloud
@@ -98,9 +103,21 @@ Esse Service escuta na porta 80 e redireciona para a porta 3000 dos Pods, fazend
 
 ### Exemplo de uso:
 ```bash
+# Instalação (em sistemas baseados em Debian/Ubuntu)
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# Iniciar o cluster
 minikube start
+
+# Verificar status
+minikube status
+
+# Aplicar um deployment
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
+
+# Abrir um serviço no navegador
 minikube service node-service
 ```
 
